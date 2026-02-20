@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg-pink: #ffedf6;
+            --calc-lime: #f3ffd9;
+            --calc-border: #ffffff;
+            --screen-white: #ffffff;
+            --screen-border: #ffd2e8;
+            --dpad-blue: #a6e8fc;
+            --btn-2nd: #000000;
+            --btn-purple: #dec7ff;
+            --btn-green: #97e700;
+            --btn-yellow: #fede00;
+            --btn-navy: #003fff;
+            --btn-skyblue: #65d1ff;
+        }
+
+        body {
+            background-color: var(--bg-pink);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0;
+            font-family: 'Verdana', sans-serif;
+        }
+
+        .calculator {
+            background-color: var(--calc-lime);
+            width: 95%; max-width: 480px;
+            /* ปรับจาก 15px เป็น 25px เพื่อให้ขอบขาวหนาขึ้นสะใจค่ะ */
+            border: 25px solid var(--calc-border); 
+            border-radius: 60px;
+            padding: 35px 20px;
+            box-sizing: border-box;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+        }
+
+        .screen {
+            background-color: var(--screen-white);
+            border: 6px solid var(--screen-border);
+            border-radius: 30px;
+            height: 180px;
+            margin-bottom: 30px;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px 8px;
+        }
+
+        .btn-cell { display: flex; flex-direction: column; align-items: center; }
+
+        .label {
+            font-size: 10px; font-weight: 800; color: #000;
+            min-height: 20px; display: flex; align-items: center;
+            justify-content: center; text-align: center; margin-bottom: 4px;
+            white-space: nowrap;
+        }
+
+        button {
+            width: 100%; aspect-ratio: 1.8 / 1;
+            background: #fff; border: 2.5px solid #ccc;
+            border-radius: 12px; font-weight: 800; font-size: 11px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            padding: 0; transition: 0.1s;
+            color: #000 !important; /* ตัวหนังสือสีดำตามที่สั่งไว้ค่ะ */
+        }
+        button:active { transform: scale(0.93); }
+
+        .dpad-container {
+            grid-column: 4 / 6; grid-row: 1 / 3;
+            display: flex; justify-content: center; align-items: center;
+            margin-top: 25px;
+        }
+        .dpad-oval {
+            width: 125px; height: 95px;
+            border: 5px solid var(--dpad-blue);
+            border-radius: 50%; background: #fff;
+            position: relative; display: flex; align-items: center; justify-content: center;
+        }
+        .arrow-btn { position: absolute; border: none; background: none; cursor: pointer; padding: 0; }
+        .arrow-svg { width: 14px; height: 14px; fill: var(--dpad-blue); }
+        
+        .up    { top: -20px; } 
+        .down  { bottom: -20px; } 
+        .left  { left: -35px; } 
+        .right { right: -35px; }
+
+        .var-layout { display: flex; align-items: center; gap: 4px; font-style: italic; color: #000; }
+        .var-x { font-size: 17px; font-weight: bold; }
+        .var-group { display: flex; flex-direction: column; font-size: 8px; line-height: 1; text-align: left; }
+
+        .btn-2nd { background: var(--btn-2nd) !important; color: #fff !important; border: none; }
+        
+        .b-purple { border-color: var(--btn-purple); }
+        .b-green { border-color: var(--btn-green); }
+        .b-yellow { border-color: var(--btn-yellow); }
+        .b-navy { border-color: var(--btn-navy); }
+        .b-skyblue { border-color: var(--btn-skyblue); }
+
+        sup { font-size: 0.6em; position: relative; top: -0.6em; font-weight: 900; }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; font-size: 9px; line-height: 1; vertical-align: middle; color: #000; }
+        .f-line { width: 10px; border-top: 1.5px solid #000; margin: 1px 0; }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <div class="screen"></div>
+    <div class="keypad">
+        <div class="btn-cell"><div class="label"></div><button class="btn-2nd">2nd</button></div>
+        <div class="btn-cell"><div class="label">quit</div><button class="b-purple">mode</button></div>
+        <div class="btn-cell"><div class="label">insert</div><button class="b-purple">delete</button></div>
+        
+        <div class="dpad-container">
+            <div class="dpad-oval">
+                <button class="arrow-btn up"><svg class="arrow-svg" viewBox="0 0 24 24"><path d="M12 4l-9 15h18z"/></svg></button>
+                <button class="arrow-btn left"><svg class="arrow-svg" viewBox="0 0 24 24"><path d="M4 12l15 9V3z"/></svg></button>
+                <button class="arrow-btn right"><svg class="arrow-svg" viewBox="0 0 24 24"><path d="M20 12L5 3v18z"/></svg></button>
+                <button class="arrow-btn down"><svg class="arrow-svg" viewBox="0 0 24 24"><path d="M12 20L3 5h18z"/></svg></button>
+            </div>
+        </div>
+
+        <div class="btn-cell"><div class="label">10<sup>x</sup></div><button class="b-purple">log</button></div>
+        <div class="btn-cell"><div class="label">angle</div><button class="b-purple">prb</button></div>
+        <div class="btn-cell"><div class="label">stat</div><button class="b-purple">data</button></div>
+        <div class="btn-cell"><div class="label">e<sup>x</sup></div><button class="b-purple">ln</button></div>
+        <div class="btn-cell"><div class="label">U<span class="frac"><span>n</span><span class="f-line"></span><span>d</span></span></div><button class="b-purple"><span class="frac"><span>n</span><span class="f-line"></span><span>d</span></span></button></div>
+        
+        <div class="btn-cell">
+            <div class="label" style="display: flex; gap: 4px;">
+                <span class="frac"><span>n</span><span class="f-line"></span><span>d</span></span> 
+                <span>◄ ►</span> 
+                U<span class="frac"><span>n</span><span class="f-line"></span><span>d</span></span>
+            </div>
+            <button class="b-purple">x10<sup>n</sup></button>
+        </div>
+
+        <div class="btn-cell"><div class="label">f ◄ ► d</div><button class="b-purple">table</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-yellow">clear</button></div>
+        <div class="btn-cell"><div class="label">hyp</div><button class="b-purple">π</button></div>
+        <div class="btn-cell"><div class="label">sin<sup>-1</sup></div><button class="b-purple">sin</button></div>
+        <div class="btn-cell"><div class="label">cos<sup>-1</sup></div><button class="b-purple">cos</button></div>
+        <div class="btn-cell"><div class="label">tan<sup>-1</sup></div><button class="b-purple">tan</button></div>
+        <div class="btn-cell"><div class="label">K</div><button class="b-navy">÷</button></div>
+        <div class="btn-cell"><div class="label"><sup>x</sup>√</div><button class="b-purple">^</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-purple">x<sup>-1</sup></button></div>
+        <div class="btn-cell"><div class="label">%</div><button class="b-purple">(</button></div>
+        <div class="btn-cell"><div class="label">► %</div><button class="b-purple">)</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-navy">×</button></div>
+        <div class="btn-cell"><div class="label">√</div><button class="b-purple">x<sup>2</sup></button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">7</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">8</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">9</button></div>
+        <div class="btn-cell"><div class="label">◄ ◐</div><button class="b-navy">−</button></div>
+        <div class="btn-cell">
+            <div class="label">clear var</div>
+            <button class="b-purple">
+                <div class="var-layout">
+                    <span class="var-x">x</span>
+                    <div class="var-group"><span>y z t</span><span>a b c</span></div>
+                </div>
+            </button>
+        </div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">4</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">5</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">6</button></div>
+        <div class="btn-cell"><div class="label">◐ ►</div><button class="b-navy">+</button></div>
+        <div class="btn-cell"><div class="label">recall</div><button class="b-purple">sto ►</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">1</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">2</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-green">3</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-skyblue">◄ ►</button></div>
+        <div class="btn-cell"><div class="label">off</div><button class="b-purple">on</button></div>
+        <div class="btn-cell"><div class="label">reset</div><button class="b-green">0</button></div>
+        <div class="btn-cell"><div class="label">,</div><button class="b-green">.</button></div>
+        <div class="btn-cell"><div class="label">ans</div><button class="b-green">(-)</button></div>
+        <div class="btn-cell"><div class="label"></div><button class="b-skyblue">enter</button></div>
+    </div>
+</div>
+
+</body>
+</html>
